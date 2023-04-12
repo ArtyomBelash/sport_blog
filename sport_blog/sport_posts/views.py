@@ -204,12 +204,6 @@ class CategoryView(ListView):
         return super().get_queryset().filter(cat__slug=self.kwargs['slug'], is_published=True)
 
 
-def search(request):
-    if request.method == 'POST':
-        find_posts = Post.objects.filter(title__icontains=request.POST.get('search1'))
-        return render(request, 'spot_posts/search.html', {'find_posts': find_posts})
-
-
 class SearchView(ListView):
     model = Post
     context_object_name = 'find_posts'
