@@ -1,0 +1,209 @@
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% block title %}
+<title>Про здоровье</title>
+{% endblock %}
+
+<link rel="icon" href="https://pngimg.com/uploads/muscle/muscle_PNG5.png" type="images/png">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/minty/bootstrap.min.css"
+      integrity="sha384-H4X+4tKc7b8s4GoMrylmy2ssQYpDHoqzPa9aKXbDwPoPUA3Ra8PA5dGzijN+ePnH"
+      crossorigin="anonymous">
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand">
+            <img src="https://pngimg.com/uploads/muscle/muscle_PNG5.png" alt="muscle" width="50" height="50"
+                 class="d-inline-block align-text-center">
+            <!--            Healthy-->
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <li class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{% url 'index' %}">Главная
+                        <span class="visually-hidden"></span>
+                    </a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'add_post' %}">Добавить пост</a>
+                </li>
+                {% endif %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="true" aria-expanded="false">Категории</a>
+                    <div class="dropdown-menu">
+                        {% for i in cat %}
+                        <a class="dropdown-item" href="{% url 'category' i.slug %}">{{i.name_cat}}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'bookmarks' %}">Закладки</a>
+                </li>
+                {% endif %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="true" aria-expanded="false">Магазин</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'products' %}">Все товары</a>
+                        {% for i in cat_shop %}
+                        <a class="dropdown-item" href="{% url 'product_category' i.slug %}">{{i.name}}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+
+                <form class="d-flex " method="post" action="{% url 'search' %}">
+                    {% csrf_token %}
+                    <input class="form-control d-flex p-2 bd-highlight" type="search" name="search1"
+                           placeholder="Поиск статьи">
+                    <button class="btn btn-primary my-2 my-sm-0" type="submit" name="search2">Поиск</button>
+                </form>
+                <li class="nav-item" style="float: right;">
+                    {% with total_items=cart|length %}
+                    {% if cart|length > 0 %}
+                    <a type="btn" href="{% url 'cart_detail' %}" class="btn btn-primary position-relative">
+                        Корзина
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-cart3"
+                             viewBox="0 0 16 16">
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ total_items }}{{ total_items|pluralize }}
+                            </span>
+                    </a>
+                    <a href="{% url 'cart_detail' %}" style="color: #fff;">
+                        {{ cart.get_total_price }} BYN
+                    </a>
+                    {% else %}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop">
+                        Коpзина
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-cart3"
+                             viewBox="0 0 16 16">
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                    </button>
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                         tabindex="-1"
+                         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Kорзина</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" style="color:black;">
+                                    Извините, Ваша корзина пока пустая
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть
+                                    </button>
+
+                                    <a type="btn" class="btn btn-primary" href="{% url 'products' %}">Перейти в
+                                        магазин</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+                </li>
+            </ul>
+    </div>
+    {% if user.is_authenticated %}
+    <div align="right">
+        {% if user.is_staff %}
+        <a type="btn" class="btn btn-primary" href="/admin/">{{user.username}}</a>
+        {% else %}
+        <h5 style="color: #fff;"> {{ user.username }}</h5>
+        {% endif %}
+        <a type="btn" class="btn btn-primary" href="{% url 'logout' %}">Выйти</a>
+        {% else %}
+        <a type="btn" class="btn btn-primary" href="{% url 'login' %}">Войти</a>
+        <a type="btn" class="btn btn-primary" href="{% url 'register' %}">Регистрация</a>
+    </div>
+    {% endif %}
+</nav>
+{% if messages %}
+{% for mess in messages %}
+<div class="alert alert-{{ mess.tags }}">
+    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+    {{ mess}}
+</div>
+{% endfor %}
+{% endif %}
+
+
+<html style=" position: relative;
+  min-height: 100%;">
+<body style="margin-bottom: 60px; ">
+</body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+{% block page_content %}
+<div style="position: relative;
+  height: 100%;
+  min-height: 100vh">
+    content
+</div>
+{% endblock %}
+
+{% if page_obj.has_other_pages %}
+<div class="col-md-8 offset-md-2">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link">&laquo;</a>
+        </li>
+        {% endif %}
+        {% for p in paginator.page_range %}
+        <li class="page-item active">
+            {% if page_obj.number == p %}
+            <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+        </li>
+        {% elif p >= page_obj.number|add:-1 and p <= page_obj.number|add:1 %}
+        <li class="page-item ">
+            <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link">&raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
+
+<div id="footer" style="position: absolute;
+  bottom: 0;
+  width: 100%;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" style="color: #fff;">
+        <p>&copy; Блог про здоровье</p>
+    </nav>
+</div>
+

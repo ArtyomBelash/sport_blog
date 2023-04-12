@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+<title>Добавить пост</title>
+{% endblock %}
+{% block page_content %}
+<div class="container-sm">
+    <h1>Ваш пост будет после проверки администратором</h1>
+    <form method="post" enctype="multipart/form-data">
+        {{ form|crispy }}
+<!--        {% for i in form %}-->
+<!--        <p><label class="form-control" for="{{ i.id_for_label }}">{{i.label}}: </label>{{ i }}</p>-->
+<!--        {% endfor %}-->
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">OK</button>
+    </form>
+</div>
+{% endblock %}

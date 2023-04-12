@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block page_content %}
+<div class="col-md-8 offset-md-2">
+    <div class="card-mb-4">
+        <div class="card-body" align="justify">
+            <a href="{% url 'product' product.slug %}"><h2 class="card-title">{{product.name_product}}</h2></a>
+            <p class="card-text">{{product.updated}} | Категории: <a
+                    href="{% url 'product_category' product.category.slug %}">{{ product.category }} </a>
+            <p class="card-text">Цена: {{product.price}} BYN</p>
+
+            <form action="{% url 'cart_add' product.slug %}" method="post">
+                <div class="col-md-2">
+                    Количество: {{ form.quantity }}<br><input type="submit" class="btn btn-success"
+                                                              value="Добавить в корзину"></div>
+                {% csrf_token %}
+
+            </form>
+            {% if product.image %}
+            <img src="{{ product.image.url }}" width="180" height="180" align="left">
+            <p class="card-text">{{product.descripion | linebreaks }}</p>
+            {% else %}
+            <p class="card-text">{{product.descripion | linebreaks }}</p>
+            {% endif %}
+            <br>
+        </div>
+    </div>
+</div>
+{% endblock %}

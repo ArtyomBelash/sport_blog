@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+<div class="container">
+    <br>
+<div class="row">
+{% for p in product_category %}
+    <div class="col-md-4">
+        <div class="card mb-2">
+            <a href="{% url 'product' p.slug %}"><h3 class="card-title" align="center">{{p.name_product}}</h3></a>
+
+            <a href="{{ p.get_absolute_url }}">
+                <img src="{{ p.image.url }}" width="340" height="340" align="center">
+            </a>
+            <div class="card-body">
+                <p class="card-text">Категории:
+                    <a href="{% url 'product_category' p.category.slug %}">{{ p.category }} </a>
+                <p> Цена: <b>{{p.price}} BYN</b></p>
+                {% if p.available %}
+                <p class="card-text">Наличие: <b>есть</b></p>
+                {% else %}
+                <p class="card-text">Нет в наличии</p>
+                {% endif %}
+                <p class="card-text">{{p.description| truncatewords:70 }}</p>
+                <p class="card-text"><small class="text-muted">{{p.descripion| truncatewords:50 }}</small></p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+<title>Корзина</title>
+{% block page_content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-8">
+            <h1>Ваша корзина</h1>
+            {% for item in cart %}
+            {% with product=item.product %}
+            <a href="{{ product.get_absolute_url }}">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" width="180" height="180" align="left">
+                {% endif %}
+            </a>
+                <p>{{ product.name_product }}</p>
+                <p>Количество: {{ item.quantity }} </p>
+                <p>Цена: {{ item.price }} BYN</p>
+                <p>Итого: {{ item.total_price }} BYN</p>
+                <p><a class="btn btn-danger" href="{% url 'cart_remove' product.slug %}">Удалить</a></p>
+            {% endwith %}
+            {% endfor %}
+            <br>
+            {% if cart %}
+                <a href="{% url 'products' %}" class="btn btn-success">Продолжить покупки</a>
+                <a href="{% url 'get_order' %}" class="btn btn-success">Заказать</a>
+            {% else %}
+                <a href="{% url 'products' %}" class="btn btn-success">Перейти в магазин</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

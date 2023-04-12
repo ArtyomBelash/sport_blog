@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block page_content %}
+{% if find_posts %}
+    {% for p in find_posts %}
+    <div class="col-md-8 offset-md-2">
+        <div class="card-mb-4" style="min-height: 10%">
+            <div class="card-body" align="justify">
+                <a href="{% url 'detail' p.slug %}"><h2 class="card-title">{{p.title}}</h2></a>
+                <p class="card-text">{{p.date}} | Категории:
+                    {% for i in p.cat.all %}
+                    <a href="{% url 'category' i.slug %}">{{ i }}</a>
+                    {% endfor %}
+                <p class="card-text">{{p.author}}</p>
+                {% if p.image %}
+                    <img src="{{ p.image.url }}" width="180" height="180" align="left"><p class="card-text">{{p.content | linebreaks | truncatewords:70}}</p>
+                {% else %}
+                    <p class="card-text">{{p.content | linebreaks | truncatewords:70}}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+<h2 align="center" style="min-height:81%;">
+    К сожалению, поиск не дал никаких результатов. Попробуйте изменить Ваш запрос.
+</h2>
+{% endif %}
+{% endblock %}

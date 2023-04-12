@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+<div class="container">
+  <h1>Закладки пользователя {{ user.username }}</h1>
+  <ul>
+    {% for bookmark in bookmarks %}
+      <li><a href="{{ bookmark.post.get_absolute_url }}">{{ bookmark.post.title }}</a></li>
+    {% empty %}
+      <li>У вас нет закладок</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
