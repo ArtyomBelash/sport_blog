@@ -7,7 +7,6 @@ urlpatterns = [
     # path('post/<slug:slug>/', detail, name='detail'),
     path('category/<slug:slug>/', CategoryView.as_view(), name='category'),
     path('add/', AddPostView.as_view(template_name='spot_posts/add_post.html'), name='add_post'),
-    # path('search/', search, name='search'),
     path('search/', SearchView.as_view(), name='search'),
     path('authors/<int:authors_id>/', AuthorPostView.as_view(), name='authors'),
     # path('add_bookmark/<int:post_id>/', add_bookmark,add_bookmark name='add_bookmark'),
