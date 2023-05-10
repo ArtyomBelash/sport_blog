@@ -1,5 +1,4 @@
 from django.contrib import messages
-# from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect, get_object_or_404
@@ -56,15 +55,6 @@ class PostDetail(DetailView, FormView, LoginRequiredMixin):
         return context
 
 
-# def add_bookmark(request, post_id):
-#     post = get_object_or_404(Post, id=post_id)
-#     bookmark = Bookmark.objects.get_or_create(user=request.user, post=post)
-#     if bookmark:
-#         messages.success(request, 'Пост добавлен в закладки')
-#         print(bookmark)
-#     return redirect('detail', slug=post.slug)
-
-
 class AddBookmark(CreateView):
     model = Post
     slug_field = 'post_slug'
@@ -99,20 +89,6 @@ class RemoveBookmark(DeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 
-# def remove_bookmark(request, post_id):
-#     post = get_object_or_404(Post, id=post_id)
-#     bookmark = Bookmark.objects.get(user=request.user, post=post)
-#     bookmark.delete()
-#     messages.success(request, 'Пост удален из закладок')
-#     return redirect('detail', slug=post.slug)
-
-
-# def bookmarks(request):
-#     user = User.objects.get(username=request.user.username)
-#     bookmarks = Bookmark.objects.filter(user=user)
-#     return render(request, 'spot_posts/bookmarks.html', {'bookmarks': bookmarks})
-
-
 class BookmarksView(LoginRequiredMixin, ListView):
     model = Bookmark
     template_name = 'spot_posts/bookmarks.html'
@@ -124,64 +100,11 @@ class BookmarksView(LoginRequiredMixin, ListView):
         return super().get_queryset().filter(user=user)
 
 
-#
-
-# def detail(request, slug):
-#     post = Post.objects.get(slug=slug)
-#     form = CommentForm()
-#     if request.method == 'POST':
-#         form = CommentForm(request.POST)
-#         if form.is_valid():
-#             user = User.objects.get(username=request.user.username)
-#             comment = Comment(
-#                 author=user,
-#                 body=form.cleaned_data['body'],
-#                 post=post)
-#             comment.save()
-#             form.cleaned_data.clear()
-#     comments = Comment.objects.filter(post=post)
-#     count_com = len(comments)
-#     cont = {
-#         'comments': comments,
-#         'count_com': count_com,
-#         'post': post,
-#         'form': form,
-#
-#     }
-#     return render(request, 'spot_posts/detail.html', cont)
-
-
-# @login_required
-# def add_post(request):
-#     if request.method == 'POST':
-#         form = PostForm(request.POST, request.FILES)
-#         if form.is_valid() and User.is_authenticated:
-#             user = User.objects.get(username=request.user.username)
-#             print(user)
-#             cats = form.cleaned_data.get('cat')
-#             post = Post(title=form.cleaned_data['title'],
-#                         image=form.cleaned_data['image'],
-#                         slug=form.cleaned_data['slug'],
-#                         video=form.cleaned_data['video'],
-#                         content=form.cleaned_data['content'],
-#                         author=user)
-#             post.save()
-#             for cat in cats:
-#                 post.cat.add(cat)
-#             messages.success(request, 'Ваш пост добавлен')
-#             return redirect('/')
-#     else:
-#         form = PostForm()
-#     return render(request, 'users/add_post.html', {'form': form})
-
-
 class AddPostView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     fields = ['title', 'content', 'image', 'cat', 'video']
     model = Post
     success_url = reverse_lazy('index')
     login_url = '/users/login/'
-
-    # success_message = 'Ваш пост добавлен'
 
     def form_valid(self, form):
         form.instance.author = self.request.user  # instance???

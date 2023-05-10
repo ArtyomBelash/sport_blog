@@ -10,23 +10,6 @@ from django.views.generic import CreateView
 from users.forms import UserCreationForm
 
 
-# def register(request):
-#     if request.method == 'POST':
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             username = form.cleaned_data.get('username')
-#             messages.success(request, f'Аккаунт создан для {username}')
-#             return redirect('index')
-#     form = UserCreationForm()
-#
-#     cont = {
-#         'form': form,
-#     }
-#
-#     return render(request, 'users/register.html', cont)
-
-
 class RegisterUser(CreateView, SuccessMessageMixin):
     form_class = UserCreationForm
     template_name = 'users/register.html'

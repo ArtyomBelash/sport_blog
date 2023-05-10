@@ -4,10 +4,6 @@ from django.contrib.admin import TabularInline
 from .models import *
 
 
-#
-# class OrderAdmin(admin.ModelAdmin):
-#     raw_id_fields = ['product']
-
 class OrderAdmin(TabularInline):
     model = OrderItem
     raw_id_fields = ['products', ]

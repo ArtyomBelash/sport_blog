@@ -7,12 +7,10 @@ from shop.models import Product
 
 
 class Orders(models.Model):
-    # order = models.ForeignKey(Cart, on_delete=models.CASCADE, verbose_name='')
     name = models.CharField(max_length=200, verbose_name='Имя')
     surname = models.CharField(max_length=200, verbose_name='Фамилия')
     phone = PhoneNumberField(region='BY', verbose_name='Телефон')
     email = models.EmailField(default=None)
-    # phone = models.CharField(max_length=14, unique=True)
     address = models.CharField(max_length=600, verbose_name='Адрес')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Создано')
     updated = models.DateTimeField(auto_now=True, verbose_name='Обнавлено')

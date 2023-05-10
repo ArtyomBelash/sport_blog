@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import FormView, DetailView
+
 
 from .forms import *
 from .models import *
@@ -25,7 +25,6 @@ def order_create(request):
                                          product=i['product'],
                                          price=i['price'],
                                          quantity=i['quantity'])
-            # очистка корзины
             cart.clear()
             return render(request, 'orders1/ty.html',
                           {'order': order})

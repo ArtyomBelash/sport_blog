@@ -7,8 +7,3 @@ class OrderForm(forms.ModelForm):
         model = Orders
         fields = ('name', 'surname', 'phone', 'email', 'address')
 
-# class OrderForm(forms.Form):
-#     address = forms.CharField()
-#     name = forms.CharField()
-#     surname = forms.CharField()
-#     phone = forms.CharField()
