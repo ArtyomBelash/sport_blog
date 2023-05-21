@@ -132,7 +132,7 @@ class SearchView(ListView):
     context_object_name = 'find_posts'
     template_name = 'spot_posts/search.html'
     ordering = ['-date']
-    paginate_by = 1
+    paginate_by = 3
     http_method_names = ['post', 'get']
 
     def get_queryset(self):
