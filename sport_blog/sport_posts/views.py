@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic.edit import FormView, DeleteView
@@ -141,7 +141,6 @@ class SearchView(ListView):
             search_query = self.request.session.get('last_search')
         self.request.session['last_search'] = search_query
         return super().get_queryset().filter(title__icontains=search_query, is_published=True)
-
 
 
 class AuthorPostView(ListView):
