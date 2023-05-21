@@ -61,11 +61,11 @@
                     </div>
                 </li>
 
-                <form class="d-flex " method="post" action="{% url 'search' %}">
-                    {% csrf_token %}
+                <form class="d-flex " method="get" action="{% url 'search' %}">
+
                     <input class="form-control d-flex p-2 bd-highlight" type="search" name="search1"
                            placeholder="Поиск статьи">
-                    <button class="btn btn-primary my-2 my-sm-0" type="submit" name="search2">Поиск</button>
+                    <button class="btn btn-primary my-2 my-sm-0" type="submit">Поиск</button>
                 </form>
                 <li class="nav-item" style="float: right;">
                     {% with total_items=cart|length %}
@@ -168,7 +168,11 @@
     <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
         <li class="page-item">
+            {% if request.GET.search1 %}
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}&search1={{ request.GET.search1 }}">&laquo;</a>
+            {% else %}
             <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+            {% endif %}
         </li>
         {% else %}
         <li class="page-item disabled">
@@ -176,19 +180,27 @@
         </li>
         {% endif %}
         {% for p in paginator.page_range %}
-        <li class="page-item active">
-            {% if page_obj.number == p %}
-            <a class="page-link" href="?page={{ p }}">{{ p }}</a>
-        </li>
-        {% elif p >= page_obj.number|add:-1 and p <= page_obj.number|add:1 %}
-        <li class="page-item ">
-            <a class="page-link" href="?page={{ p }}">{{ p }}</a>
-        </li>
-        {% endif %}
+          {% if page_obj.number == p %}
+            <li class="page-item active">
+                <a class="page-link" href="#">{{ p }}</a>
+            </li>
+          {% elif p >= page_obj.number|add:-1 and p <= page_obj.number|add:1 %}
+            <li class="page-item ">
+                {% if request.GET.search1 %}
+                <a class="page-link" href="?page={{ p }}&search1={{ request.GET.search1 }}">{{ p }}</a>
+                {% else %}
+                <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                {% endif %}
+            </li>
+          {% endif %}
         {% endfor %}
         {% if page_obj.has_next %}
         <li class="page-item">
+            {% if request.GET.search1 %}
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}&search1={{ request.GET.search1 }}">&raquo;</a>
+            {% else %}
             <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+            {% endif %}
         </li>
         {% else %}
         <li class="page-item disabled">
@@ -198,6 +210,7 @@
     </ul>
 </div>
 {% endif %}
+
 
 <div id="footer" style="position: absolute;
   bottom: 0;

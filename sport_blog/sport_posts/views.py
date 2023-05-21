@@ -132,15 +132,16 @@ class SearchView(ListView):
     context_object_name = 'find_posts'
     template_name = 'spot_posts/search.html'
     ordering = ['-date']
-    paginate_by = 3
-    http_method_names = ['post', ]
+    paginate_by = 1
+    http_method_names = ['post', 'get']
 
     def get_queryset(self):
-        if self.request.method == 'POST':
-            return super().get_queryset().filter(title__icontains=self.request.POST.get('search1'), is_published=True)
+        search_query = self.request.GET.get('search1')
+        if not search_query:
+            search_query = self.request.session.get('last_search')
+        self.request.session['last_search'] = search_query
+        return super().get_queryset().filter(title__icontains=search_query, is_published=True)
 
-    def post(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
 
 
 class AuthorPostView(ListView):
