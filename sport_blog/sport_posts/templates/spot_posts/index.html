@@ -3,50 +3,51 @@
 
 {% block page_content %}
 {% if page_obj.number == 1 %}
-<!--<div class="col-md-8 offset-md-2">-->
 <br>
 <div class="col-md-8 offset-md-2">
     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="https://klike.net/uploads/posts/2022-09/1664519202_j-2.jpg" class="d-block w-100"  width="100%" height="500">
+                <img src="https://klike.net/uploads/posts/2022-09/1664519202_j-2.jpg" class="d-block w-100" width="100%" height="500" alt="First Slide">
             </div>
             <div class="carousel-item">
-                <img src="https://st2.depositphotos.com/1053932/5608/i/600/depositphotos_56081273-stock-photo-gym-nobody-with-barbells-kettlebells.jpg" class="d-block w-100" alt="..." width="500" height="500">
+                <img src="https://st2.depositphotos.com/1053932/5608/i/600/depositphotos_56081273-stock-photo-gym-nobody-with-barbells-kettlebells.jpg" class="d-block w-100" alt="Second Slide" width="500" height="500">
             </div>
             <div class="carousel-item">
-                <img src="https://thecity.m24.ru/b/d/SYketSivfo8-J_bObLLBFlFNGhtudTX-kYVfOS8Xp1Gj5pqKzWTJSFS-PsArI08gRZaK1yZktQXWesHOaOz7FWcJ5xZMng=m42Vtvvu-7Vvdyx3QZs-Cw.jpg" class="d-block w-100"  width="500" height="500">
+                <img src="https://thecity.m24.ru/b/d/SYketSivfo8-J_bObLLBFlFNGhtudTX-kYVfOS8Xp1Gj5pqKzWTJSFS-PsArI08gRZaK1yZktQXWesHOaOz7FWcJ5xZMng=m42Vtvvu-7Vvdyx3QZs-Cw.jpg" class="d-block w-100" width="500" height="500" alt="Third Slide">
             </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"  data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden"></span>
+            <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"  data-bs-slide="next">
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden"></span>
+            <span class="visually-hidden">Next</span>
         </button>
     </div>
 </div>
 {% endif %}
 {% for p in post %}
-<div class="col-md-8 offset-md-2" >
-    <div class="card-mb-4">
+<br>
+<div class="col-md-8 offset-md-2">
+    <div class="card mb-4">
         <div class="card-body" align="justify">
-            <a href="{{ p.get_absolute_url }}"><h2 class="card-title">{{p.title}}</h2></a>
-            <p class="card-text">{{p.date}} | Категории:
+            <a href="{{ p.get_absolute_url }}"><h2 class="card-title">{{ p.title }}</h2></a>
+            <p class="card-text">{{ p.date }} | Категории:
                 {% for i in p.cat.all %}
-                <a href="{% url 'category' i.slug %}">{{ i }} </a>
+                    <a href="{% url 'category' i.slug %}">{{ i }}</a>
                 {% endfor %}
-            <p class="card-text">Автор: <a href="{% url 'authors' p.author.id %}">{{ p.author }} </a></p>
+            </p>
+            <p class="card-text">Автор: <a href="{% url 'authors' p.author.id %}">{{ p.author }}</a></p>
             {% if p.image %}
                 <a href="{{ p.get_absolute_url }}">
-                    <img src="{{ p.image.url }}" width="180" height="180" align="left"></a>
-                    <p class="card-text">{{p.content | linebreaks | truncatewords:70}}</p>
-            {% else %}
-                <p class="card-text">{{p.content | linebreaks | truncatewords:70}}</p>
+                    <img src="{{ p.image.url }}" width="180" height="180" align="left">
+                </a>
             {% endif %}
-            <br>
+            <p class="card-text">
+                {{ p.content | linebreaks | truncatewords:70 }}
+            </p>
         </div>
     </div>
 </div>

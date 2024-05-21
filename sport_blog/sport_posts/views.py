@@ -1,8 +1,10 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic.edit import FormView, DeleteView
 from .forms import *
@@ -18,38 +20,32 @@ class PostListView(ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        return super().get_queryset().filter(is_published=True)
+        return super().get_queryset().filter(is_published=True).prefetch_related('cat', 'author')
 
 
-class PostDetail(DetailView, FormView, LoginRequiredMixin):
+class PostDetail(DetailView, FormView):
     model = Post
     context_object_name = 'post'
     template_name = 'spot_posts/detail.html'
     form_class = CommentForm
-    login_url = '/users/login/'
-
-    # success_url = reverse_lazy('detail')
-
-    def get_queryset(self):
-        return super().get_queryset().filter(slug=self.kwargs['slug'])
 
     def get_success_url(self):
-        # return self.request.META.get('HTTP_REFERER', 'detail')  # ??????? Работает
-        return reverse_lazy('detail', kwargs={'slug': Post.objects.get(slug=self.kwargs['slug']).slug})
+        return reverse_lazy('detail', kwargs={'slug': self.get_object().slug})
 
     def form_valid(self, form):
         form = Comment.objects.create(author=self.request.user,
                                       body=form.cleaned_data['body'],
-                                      post=Post.objects.get(slug=self.kwargs['slug']))
+                                      post=self.get_object())
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)  # первоначальный словарь
-        context['comments'] = Comment.objects.filter(
-            post=Post.objects.get(slug=self.kwargs['slug']))  # добавление в словарь по ключу
-        context['count_com'] = len(context['comments'])
+        context = super().get_context_data(**kwargs)
+        comments = Comment.objects.filter(post__slug=self.kwargs['slug']).select_related('author')
+        context['comments'] = comments
+        count_com = comments.count()
+        context['count_com'] = count_com
         if self.request.user.is_authenticated:
-            bookmark = Bookmark.objects.filter(post=self.get_queryset()[0], user=self.request.user)
+            bookmark = Bookmark.objects.filter(post=self.get_object(), user=self.request.user)
             if bookmark:
                 context['bookmark'] = bookmark
         return context
@@ -66,7 +62,7 @@ class AddBookmark(CreateView):
             messages.success(request, 'Пост добавлен в закладки')
         return redirect('detail', slug=post.slug)
 
-    def dispatch(self, request, *args, **kwargs):  # метод проверяет авторизован ли пользователь
+    def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('index')
         return super().dispatch(request, *args, **kwargs)
@@ -101,13 +97,13 @@ class BookmarksView(LoginRequiredMixin, ListView):
 
 
 class AddPostView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
-    fields = ['title', 'content', 'image', 'cat', 'video']
+    fields = ('title', 'content', 'image', 'cat', 'video')
     model = Post
     success_url = reverse_lazy('index')
     login_url = '/users/login/'
 
     def form_valid(self, form):
-        form.instance.author = self.request.user  # instance???
+        form.instance.author = self.request.user
         return super().form_valid(form)
 
     def get_success_message(self, cleaned_data):

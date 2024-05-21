@@ -1,3 +1,4 @@
+{% load static %}
 {% load bootstrap4 %}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
@@ -5,7 +6,8 @@
 <title>Про здоровье</title>
 {% endblock %}
 
-<link rel="icon" href="https://pngimg.com/uploads/muscle/muscle_PNG5.png" type="images/png">
+<link rel="icon" href="{% static 'images/img_1.png' %}" type="images/png">
+
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/minty/bootstrap.min.css"
       integrity="sha384-H4X+4tKc7b8s4GoMrylmy2ssQYpDHoqzPa9aKXbDwPoPUA3Ra8PA5dGzijN+ePnH"

@@ -18,15 +18,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+]
+INSTALLED_APPS += [
     'sport_posts.apps.SportPostsConfig',
-    'embed_video',
     'users.apps.UsersConfig',
+    'order1.apps.Order1Config',
+    'shop.apps.ShopConfig',
+    'cart.apps.CartConfig',
+
+    'embed_video',
     'crispy_forms',
     'crispy_bootstrap4',
     'bootstrap4',
-    'shop.apps.ShopConfig',
-    'cart.apps.CartConfig',
-    'order1.apps.Order1Config',
     'phonenumber_field',
     'django.contrib.sites',
     'allauth',
@@ -34,7 +38,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'captcha',
-
+    'debug_toolbar'
 ]
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
@@ -68,6 +72,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
+
+INTERNAL_IPS = [
+    "127.0.0.1",
 ]
 
 CART_SESSION_ID = 'cart'
