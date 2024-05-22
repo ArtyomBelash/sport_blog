@@ -10,7 +10,7 @@ class ProductView(ListView):
     ordering = ['-updated']
     paginate_by = 6
     template_name = 'shop/all_products.html'
-    queryset = Product.objects.filter(available=True)
+    queryset = Product.objects.filter(available=True).select_related('category')
 
 
 class ProductDetail(DetailView, FormView):
@@ -31,4 +31,4 @@ class CategoryShopView(ListView):
 
     def get_queryset(self):
         cat = CategoryShop.objects.get(slug=self.kwargs['slug'])
-        return super().get_queryset().filter(category=cat)
+        return super().get_queryset().filter(category=cat).select_related('category')

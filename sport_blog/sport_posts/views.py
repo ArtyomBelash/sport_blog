@@ -93,7 +93,7 @@ class BookmarksView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         user = User.objects.get(username=self.request.user.username)
-        return super().get_queryset().filter(user=user)
+        return super().get_queryset().filter(user=user).select_related('post')
 
 
 class AddPostView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
@@ -120,7 +120,8 @@ class CategoryView(ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        return super().get_queryset().filter(cat__slug=self.kwargs['slug'], is_published=True)
+        return super().get_queryset().filter(cat__slug=self.kwargs['slug'], is_published=True).prefetch_related(
+            'cat').select_related('author')
 
 
 class SearchView(ListView):
@@ -136,7 +137,8 @@ class SearchView(ListView):
         if not search_query:
             search_query = self.request.session.get('last_search')
         self.request.session['last_search'] = search_query
-        return super().get_queryset().filter(title__icontains=search_query, is_published=True)
+        return super().get_queryset().filter(title__icontains=search_query, is_published=True).prefetch_related(
+            'cat').select_related('author')
 
 
 class AuthorPostView(ListView):
@@ -147,4 +149,5 @@ class AuthorPostView(ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        return super().get_queryset().filter(author=self.kwargs['authors_id'], is_published=True)
+        return super().get_queryset().filter(author=self.kwargs['authors_id'], is_published=True).prefetch_related(
+            'cat').select_related('author')
